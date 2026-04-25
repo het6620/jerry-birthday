@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Happy Birthday Jerry 🎂🐭</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════
+   ROOT & RESET
+══════════════════════════════════════════════════════ */
+:root{
+  --tom:#7bafd4; --jerry:#c97c3a; --cream:#fef9f0;
+  --red:#e84040; --yellow:#f9c74f; --pink:#ffb3c1;
+  --green:#90be6d; --dark:#2d2a26; --shadow:rgba(0,0,0,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Baloo 2',cursive;
+  background:var(--cream);
+  overflow-x:hidden;
+  cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Ctext y='26' font-size='24'%3E🐾%3C/text%3E%3C/svg%3E"),auto;
+}
+img{max-width:100%;height:auto;display:block;}
+
+/* ══════════════════════════════════════════════════════
+   FLOATING MUSIC PLAYER
+══════════════════════════════════════════════════════ */
+#music-player{
+  position:fixed; bottom:20px; right:16px; z-index:3000;
+  display:flex; flex-direction:column; align-items:flex-end; gap:10px;
+}
+.music-btn{
+  width:54px; height:54px; border-radius:50%;
+  border:none; cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;
+  box-shadow:0 4px 18px rgba(0,0,0,0.22);
+  transition:transform 0.2s,box-shadow 0.2s;
+  position:relative;
+}
+.music-btn:active{transform:scale(0.92);}
+#bg-toggle{
+  background:linear-gradient(135deg,var(--yellow),var(--jerry));
+  animation:playerPulse 2s ease-in-out infinite;
+}
+@keyframes playerPulse{
+  0%,100%{box-shadow:0 4px 18px rgba(249,199,79,0.4);}
+  50%{box-shadow:0 4px 28px rgba(249,199,79,0.7),0 0 0 8px rgba(249,199,79,0.12);}
+}
+#bg-toggle.playing{animation:spinNote 3s linear infinite;}
+@keyframes spinNote{to{transform:rotate(360deg);}}
+.music-label{
+  position:absolute; right:62px; top:50%; transform:translateY(-50%);
+  background:var(--dark); color:#fff;
+  font-family:'Caveat',cursive; font-size:0.85rem;
+  white-space:nowrap; border-radius:20px; padding:4px 12px;
+  pointer-events:none; opacity:0; transition:opacity 0.2s;
+}
+.music-btn:hover .music-label{opacity:1;}
+
+/* Playing bars animation */
+.bars{display:flex;gap:3px;align-items:flex-end;height:18px;}
+.bar{
+  width:3px; border-radius:3px; background:#fff;
+  animation:barDance 0.6s ease-in-out infinite alternate;
+}
+.bar:nth-child(2){animation-delay:.15s;}
+.bar:nth-child(3){animation-delay:.3s;}
+@keyframes barDance{from{height:4px;}to{height:16px;}}
+
+/* Tap-to-play toast */
+#music-toast{
+  position:fixed; bottom:90px; left:50%; transform:translateX(-50%);
+  background:var(--dark); color:#fff;
+  font-family:'Caveat',cursive; font-size:1rem;
+  padding:0.5rem 1.4rem; border-radius:50px;
+  z-index:3000; pointer-events:none;
+  animation:toastIn 0.4s ease both, toastOut 0.4s 3.5s ease forwards;
+  white-space:nowrap;
+}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(10px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+@keyframes toastOut{to{opacity:0;transform:translateX(-50%) translateY(10px);}}
+
+/* ══════════════════════════════════════════════════════
+   BIRTHDAY MODAL
+══════════════════════════════════════════════════════ */
+#bday-overlay{
+  position:fixed;inset:0;z-index:2000;
+  background:rgba(0,0,0,0.72);
+  backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
+  display:none;align-items:center;justify-content:center;
+  padding:10px;
+  overscroll-behavior:contain;
+}
+#bday-overlay.open{display:flex;}
+
+.bday-modal{
+  background:linear-gradient(145deg,#fff9f0,#fff0f5);
+  border-radius:28px;
+  width:100%; max-width:820px;
+  max-height:92vh; overflow-y:auto;
+  padding:24px 20px 20px;
+  position:relative;
+  box-shadow:0 32px 80px rgba(0,0,0,0.38);
+  animation:modalPop 0.5s cubic-bezier(.22,1.6,.4,1) both;
+  scrollbar-width:thin;
+  -webkit-overflow-scrolling:touch;
+}
+@keyframes modalPop{
+  from{transform:scale(0.5) rotate(-4deg);opacity:0;}
+  to{transform:scale(1) rotate(0deg);opacity:1;}
+}
+.bday-close{
+  position:absolute;top:14px;right:14px;
+  background:var(--dark);color:#fff;
+  border:none;border-radius:50%;
+  width:40px;height:40px;
+  font-size:1.2rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform 0.2s,background 0.2s;
+  z-index:10;flex-shrink:0;
+}
+.bday-close:hover{transform:rotate(90deg);background:var(--red);}
+
+.balloons{
+  display:flex;justify-content:center;gap:clamp(0.4rem,2vw,1rem);
+  margin-bottom:1rem;font-size:clamp(1.6rem,5vw,2.4rem);
+}
+.balloons span{animation:balloonBob 1.8s ease-in-out infinite;display:inline-block;}
+.balloons span:nth-child(2){animation-delay:.3s;}
+.balloons span:nth-child(3){animation-delay:.6s;}
+.balloons span:nth-child(4){animation-delay:.9s;}
+.balloons span:nth-child(5){animation-delay:1.2s;}
+@keyframes balloonBob{0%,100%{transform:translateY(0) rotate(-4deg);}50%{transform:translateY(-12px) rotate(4deg);}}
+
+.bday-title{
+  text-align:center;
+  font-size:clamp(1.7rem,6vw,3.4rem);
+  font-weight:800;line-height:1.15;margin-bottom:0.2rem;
+  animation:rainbowText 3s linear infinite;
+}
+@keyframes rainbowText{
+  0%{color:#e84040;}20%{color:#f9c74f;}40%{color:#90be6d;}
+  60%{color:#7bafd4;}80%{color:#c97c3a;}100%{color:#e84040;}
+}
+.bday-subtitle{
+  text-align:center;font-family:'Caveat',cursive;
+  font-size:clamp(0.95rem,3vw,1.4rem);color:#999;margin-bottom:1.4rem;
+}
+
+/* ─── Carousel ─── */
+.carousel-wrap{
+  position:relative;border-radius:20px;overflow:hidden;
+  margin-bottom:1.4rem;
+  box-shadow:0 8px 30px rgba(0,0,0,0.16);
+  touch-action:pan-y;
+}
+.carousel-track{
+  display:flex;
+  transition:transform 0.5s cubic-bezier(.22,1,.36,1);
+  will-change:transform;
+}
+.carousel-slide{
+  min-width:100%;
+  aspect-ratio:16/9;
+  background:#f0e8d8;
+  overflow:hidden;position:relative;
+}
+.carousel-slide img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform 5s ease;
+  display:block;
+}
+.carousel-slide:hover img,.carousel-slide.active img{transform:scale(1.04);}
+.slide-caption{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(transparent,rgba(0,0,0,0.62));
+  color:#fff;font-family:'Caveat',cursive;
+  font-size:clamp(0.85rem,3vw,1.3rem);
+  padding:1.2rem 1rem 0.7rem;
+}
+.carousel-btn{
+  position:absolute;top:50%;transform:translateY(-50%);
+  background:rgba(255,255,255,0.9);border:none;
+  width:40px;height:40px;border-radius:50%;
+  font-size:1.3rem;cursor:pointer;z-index:5;
+  box-shadow:0 3px 12px rgba(0,0,0,0.18);
+  display:flex;align-items:center;justify-content:center;
+  transition:background 0.2s,transform 0.2s;
+}
+.carousel-btn:active{transform:translateY(-50%) scale(0.9);}
+.carousel-prev{left:8px;} .carousel-next{right:8px;}
+.carousel-dots{
+  display:flex;justify-content:center;gap:7px;margin-bottom:1.4rem;
+}
+.dot{
+  width:9px;height:9px;border-radius:50%;
+  background:#e0d0c8;cursor:pointer;border:none;
+  transition:background 0.3s,transform 0.3s;
+}
+.dot.active{background:var(--jerry);transform:scale(1.4);}
+
+/* ─── Birthday message ─── */
+.bday-message{
+  background:#fffdf7;
+  border:2px dashed var(--yellow);
+  border-radius:20px;
+  padding:clamp(1.2rem,4vw,2rem) clamp(1rem,4vw,1.8rem);
+  font-family:'Caveat',cursive;
+  font-size:clamp(1rem,3vw,1.25rem);
+  line-height:1.95;color:#555;
+  position:relative;margin-bottom:1.2rem;
+  box-shadow:5px 5px 0 #f9c74f2a;
+}
+.bday-message::before{
+  content:'🎂';position:absolute;
+  top:-18px;left:50%;transform:translateX(-50%);
+  font-size:2rem;
+}
+.bday-message strong{color:var(--red);}
+.bday-sign{
+  text-align:right;font-size:clamp(1.1rem,3vw,1.4rem);
+  font-weight:700;color:var(--dark);margin-top:1rem;
+}
+.cake-row{
+  display:flex;justify-content:center;
+  gap:clamp(0.3rem,1.5vw,0.6rem);
+  font-size:clamp(1.3rem,4vw,1.8rem);
+}
+.cake-row span{animation:wiggle 1.2s ease-in-out infinite;display:inline-block;}
+.cake-row span:nth-child(odd){animation-delay:.2s;}
+@keyframes wiggle{0%,100%{transform:rotate(-5deg) scale(1);}50%{transform:rotate(5deg) scale(1.1);}}
+
+/* ══════════════════════════════════════════════════════
+   CONFETTI
+══════════════════════════════════════════════════════ */
+#confetti{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:1999;
+}
+
+/* ══════════════════════════════════════════════════════
+   HERO
+══════════════════════════════════════════════════════ */
+.hero{
+  min-height:100vh;min-height:100svh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+  background:linear-gradient(160deg,#fff7e6 0%,#ffe8cc 45%,#ffd6e0 100%);
+  padding:1.5rem;text-align:center;
+  gap:0.4rem;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,#f9c74f30 2px,transparent 2px);
+  background-size:34px 34px;
+  animation:dotMove 14s linear infinite;
+}
+@keyframes dotMove{to{background-position:34px 34px;}}
+.hearts-bg span{
+  position:absolute;font-size:clamp(1rem,3vw,1.4rem);
+  animation:floatUp linear infinite;opacity:0;pointer-events:none;
+}
+@keyframes floatUp{
+  0%{transform:translateY(0) rotate(0deg);opacity:.8;}
+  100%{transform:translateY(-110vh) rotate(360deg);opacity:0;}
+}
+.bday-banner{
+  background:linear-gradient(90deg,#e84040,#f9c74f,#90be6d,#7bafd4,#e84040);
+  background-size:400%;
+  color:#fff;font-weight:800;
+  font-size:clamp(0.65rem,2.2vw,0.95rem);
+  letter-spacing:2px;text-transform:uppercase;
+  padding:0.4rem 1.4rem;border-radius:50px;z-index:2;
+  animation:bannerShift 3s linear infinite,fadeUp 0.8s ease both;
+}
+@keyframes bannerShift{to{background-position:-400% 0;}}
+@keyframes fadeUp{from{transform:translateY(16px);opacity:0;}to{opacity:1;}}
+.hero-title{
+  font-size:clamp(1.9rem,8vw,5rem);
+  font-weight:800;color:var(--dark);line-height:1.1;z-index:2;
+  animation:titlePop 0.8s cubic-bezier(.36,1.8,.5,1) both;
+}
+@keyframes titlePop{from{transform:scale(0);opacity:0;}to{transform:scale(1);opacity:1;}}
+.hero-title .highlight{
+  color:var(--red);display:inline-block;
+  animation:wobble 2s ease-in-out infinite;
+}
+@keyframes wobble{0%,100%{transform:rotate(-3deg);}50%{transform:rotate(3deg);}}
+.hero-subtitle{
+  font-family:'Caveat',cursive;
+  font-size:clamp(0.95rem,3.2vw,1.5rem);
+  color:#888;z-index:2;
+  animation:fadeUp 1s 0.4s both;
+}
+.click-hint{
+  z-index:2;font-family:'Caveat',cursive;
+  font-size:clamp(0.85rem,2.8vw,1.05rem);color:var(--jerry);
+  background:#fff;border-radius:50px;
+  padding:0.35rem 1.2rem;
+  box-shadow:0 2px 12px rgba(0,0,0,0.1);
+  animation:hintPulse 1.5s ease-in-out infinite,fadeUp 1s 0.8s both;
+  cursor:pointer;border:none;
+  display:inline-block;
+}
+@keyframes hintPulse{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.04);box-shadow:0 4px 20px rgba(201,124,58,.3);}
+}
+
+/* ─── Chase scene ─── */
+.chase-scene{
+  position:relative;
+  width:min(560px,94vw);
+  height:clamp(90px,22vw,130px);
+  margin:0.6rem auto 0;z-index:2;overflow:hidden;
+}
+.chase-ground{
+  position:absolute;bottom:0;left:0;right:0;
+  height:clamp(10px,2.5vw,18px);
+  background:repeating-linear-gradient(90deg,#e8b86d 0 24px,#d4a055 24px 48px);
+  border-radius:8px;
+}
+.tom-char,.jerry-char{position:absolute;bottom:clamp(10px,2.5vw,18px);animation:runAcross 5s linear infinite;}
+.jerry-char{animation-delay:-1.2s;} .tom-char{animation-delay:-2.4s;}
+@keyframes runAcross{0%{left:-90px;}100%{left:calc(100% + 90px);}}
+.tom-svg{width:clamp(52px,11vw,80px);height:auto;}
+.jerry-svg{width:clamp(40px,8.5vw,60px);height:auto;}
+.leg {animation:legRun .28s ease-in-out infinite alternate;transform-origin:top center;}
+.leg2{animation:legRun .28s ease-in-out infinite alternate-reverse;transform-origin:top center;}
+@keyframes legRun{from{transform:rotate(-22deg);}to{transform:rotate(22deg);}}
+.arm {animation:armSwing .28s ease-in-out infinite alternate;transform-origin:top center;}
+@keyframes armSwing{from{transform:rotate(-18deg);}to{transform:rotate(18deg);}}
+.star-burst{position:absolute;font-size:1rem;animation:starSpin 1s linear infinite;}
+@keyframes starSpin{to{transform:rotate(360deg) scale(1.2);}}
+
+/* ══════════════════════════════════════════════════════
+   SECTIONS
+══════════════════════════════════════════════════════ */
+section{padding:clamp(2.5rem,8vw,5rem) clamp(1rem,5vw,1.5rem);}
+.section-label{
+  font-family:'Caveat',cursive;font-size:0.9rem;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--jerry);display:block;text-align:center;margin-bottom:0.4rem;
+}
+.section-title{
+  font-size:clamp(1.5rem,5vw,3rem);font-weight:800;
+  text-align:center;color:var(--dark);
+  margin-bottom:clamp(1.5rem,5vw,3rem);
+}
+
+/* ─── Reasons ─── */
+.reasons-section{
+  background:linear-gradient(135deg,#fff7e6,#fce4ec);
+  position:relative;overflow:hidden;
+}
+.reasons-section::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,#f9c74f20 2px,transparent 2px);
+  background-size:28px 28px;
+}
+.reasons-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr));
+  gap:clamp(1rem,3vw,1.5rem);max-width:900px;margin:0 auto;
+}
+.reason-card{
+  background:#fff;border-radius:18px;
+  padding:clamp(1rem,3vw,1.6rem) 1rem;
+  text-align:center;box-shadow:0 4px 20px var(--shadow);
+  transition:transform .3s,box-shadow .3s;position:relative;z-index:1;
+}
+.reason-card:hover{transform:translateY(-7px) rotate(1deg);box-shadow:0 12px 32px var(--shadow);}
+.reason-card .icon{font-size:clamp(2rem,5vw,2.6rem);display:block;margin-bottom:0.4rem;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.14);}}
+.reason-card h3{font-size:clamp(0.85rem,2.2vw,1rem);font-weight:700;color:var(--dark);margin-bottom:0.25rem;}
+.reason-card p{font-family:'Caveat',cursive;font-size:clamp(0.82rem,2vw,0.95rem);color:#888;}
+
+/* ─── Duel ─── */
+.duel-section{
+  background:linear-gradient(135deg,#e0f4ff,#d4edff);
+  text-align:center;
+  padding:clamp(2rem,7vw,4rem) 1rem;
+}
+.duel-stage{
+  max-width:460px;margin:0 auto;
+  position:relative;height:clamp(140px,35vw,180px);
+}
+.duel-tom,.duel-jerry{
+  position:absolute;bottom:0;
+  display:flex;flex-direction:column;align-items:center;gap:0.25rem;
+}
+.duel-tom{left:2%;} .duel-jerry{right:2%;}
+.duel-jerry-inner{
+  cursor:pointer;transition:transform .2s;position:relative;
+}
+.duel-jerry-inner:hover{transform:scale(1.08);}
+.duel-jerry-inner::after{
+  content:'🎂 Tap me!';
+  position:absolute;top:-36px;left:50%;transform:translateX(-50%);
+  background:var(--red);color:#fff;
+  font-family:'Caveat',cursive;font-size:clamp(0.75rem,2.5vw,0.9rem);
+  white-space:nowrap;border-radius:20px;padding:3px 10px;
+  animation:tooltipBob 1.2s ease-in-out infinite;pointer-events:none;
+}
+@keyframes tooltipBob{
+  0%,100%{transform:translateX(-50%) translateY(0);}
+  50%{transform:translateX(-50%) translateY(-5px);}
+}
+.duel-jerry-inner:active{transform:scale(0.91);}
+.duel-label{
+  font-family:'Caveat',cursive;font-size:clamp(0.75rem,2.5vw,1.1rem);
+  font-weight:700;background:var(--dark);color:#fff;
+  border-radius:20px;padding:0.1rem 0.65rem;
+}
+.duel-heart{
+  position:absolute;bottom:50%;left:50%;
+  transform:translate(-50%,50%);
+  font-size:clamp(2rem,7vw,3.5rem);
+  animation:heartbeat .9s ease-in-out infinite;
+  filter:drop-shadow(0 4px 12px #ff000055);
+}
+@keyframes heartbeat{
+  0%,100%{transform:translate(-50%,50%) scale(1);}
+  50%{transform:translate(-50%,50%) scale(1.22);}
+}
+.duel-tom svg,.duel-jerry svg{filter:drop-shadow(0 4px 8px rgba(0,0,0,.15));}
+.duel-hint{
+  font-family:'Caveat',cursive;color:#7bafd4;
+  font-size:clamp(0.85rem,2.5vw,1.05rem);margin-top:1rem;
+}
+
+/* ─── Letter ─── */
+.letter-section{background:#fff;}
+.letter-card{
+  max-width:640px;margin:0 auto;
+  background:#fffdf7;
+  border:2px dashed var(--yellow);border-radius:24px;
+  padding:clamp(1.5rem,5vw,3rem) clamp(1.2rem,5vw,2.5rem);
+  box-shadow:7px 7px 0 #f9c74f33;
+  position:relative;
+  font-family:'Caveat',cursive;
+  font-size:clamp(1rem,3vw,1.25rem);line-height:1.9;color:#555;
+}
+.letter-card::before{
+  content:'💌';position:absolute;top:-20px;
+  left:50%;transform:translateX(-50%);font-size:2.2rem;
+}
+.letter-card strong{color:var(--red);}
+.letter-signature{margin-top:1.5rem;text-align:right;font-size:clamp(1.1rem,3vw,1.4rem);font-weight:700;color:var(--dark);}
+
+/* ─── Footer ─── */
+footer{
+  background:var(--dark);color:#fff;
+  text-align:center;
+  padding:clamp(1.5rem,5vw,2.5rem) 1rem;
+  font-family:'Caveat',cursive;font-size:clamp(1rem,3vw,1.2rem);
+}
+footer .paw{font-size:1.5rem;display:inline-block;animation:pawBounce .6s ease-in-out infinite alternate;}
+@keyframes pawBounce{to{transform:translateY(-6px);}}
+footer p{margin-top:0.5rem;color:#aaa;font-size:0.82rem;font-family:'Baloo 2',cursive;}
+
+/* ─── Scroll reveal ─── */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ─── Sparkle cursor ─── */
+.sparkle{
+  position:fixed;pointer-events:none;z-index:1998;
+  font-size:1.1rem;animation:sparkleAnim .7s forwards;
+}
+@keyframes sparkleAnim{
+  0%{opacity:1;transform:scale(1) translateY(0);}
+  100%{opacity:0;transform:scale(.3) translateY(-28px);}
+}
+
+/* ══════════════════════════════════════════════════════
+   MOBILE OVERRIDES  ≤ 480px
+══════════════════════════════════════════════════════ */
+@media(max-width:480px){
+  body{cursor:auto;}/* disable custom cursor on touch */
+  .bday-modal{border-radius:20px;padding:16px 14px 18px;}
+  .bday-close{width:36px;height:36px;font-size:1rem;}
+  .carousel-btn{width:34px;height:34px;font-size:1.1rem;}
+  .duel-stage{height:125px;}
+  .duel-tom svg{width:72px;}
+  .duel-jerry-inner svg{width:62px;}
+  .duel-heart{font-size:2rem;}
+  .letter-card{border-radius:18px;}
+  #music-player{bottom:14px;right:12px;}
+  .music-btn{width:48px;height:48px;font-size:1.2rem;}
+  /* hide tooltip on touch, rely on label */
+  .duel-jerry-inner::after{font-size:0.72rem;padding:2px 8px;}
+}
+@media(max-width:360px){
+  .hero-title{font-size:1.7rem;}
+  .balloons{font-size:1.4rem;gap:0.3rem;}
+  .bday-title{font-size:1.55rem;}
+  .duel-stage{height:110px;max-width:100%;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     MUSIC PLAYER
+══════════════════════════════════════════════════════ -->
+<div id="music-player">
+  <button class="music-btn" id="bg-toggle" onclick="toggleBgMusic()" title="Toggle background music">
+    <span class="music-label">Background Music</span>
+    <span id="bg-icon">🎵</span>
+  </button>
+</div>
+<div id="music-toast">🎵 Tap 🎵 to start the music!</div>
+
+<!-- ══════════════════════════════════════════════════════
+     BIRTHDAY MODAL
+══════════════════════════════════════════════════════ -->
+<div id="bday-overlay">
+  <div class="bday-modal">
+    <button class="bday-close" onclick="closeModal()">✕</button>
+
+    <div class="balloons">
+      <span>🎈</span><span>🎉</span><span>🎂</span><span>🎉</span><span>🎈</span>
+    </div>
+
+    <h2 class="bday-title">Happy Birthday,<br>My Jerry! 🐭🎂</h2>
+    <p class="bday-subtitle">~ The cheese to my trap, the smirk to my chase ~</p>
+
+    <!-- PHOTO CAROUSEL -->
+    <div class="carousel-wrap">
+      <div class="carousel-track" id="track">
+
+        <div class="carousel-slide">
+          <!-- Replace src with your photo, e.g. src="photo1.jpg" -->
+          <img src="1.jpeg" alt="Memory 1"
+               onerror="this.src='https://via.placeholder.com/900x506/ffecd2/c97c3a?text=Your+Photo+Here'">
+        </div>
+
+        <div class="carousel-slide">
+          <img src="2.jpeg" alt="Memory 2">
+        </div>
+
+        <div class="carousel-slide">
+          <img src="3.jpeg" alt="Memory 3">
+        </div>
+
+        <div class="carousel-slide">
+          <img src="4.jpeg" alt="Memory 4">
+        </div>
+
+        <div class="carousel-slide">
+          <img src="5.jpeg" alt="Memory 5">
+        </div>
+
+        <div class="carousel-slide">
+          <img src="6.jpeg" alt="Memory 6">
+        </div>
+
+      </div>
+      <button class="carousel-btn carousel-prev" onclick="slideCarousel(-1)">‹</button>
+      <button class="carousel-btn carousel-next" onclick="slideCarousel(1)">›</button>
+    </div>
+    <div class="carousel-dots" id="dots"></div>
+
+    <!-- BIRTHDAY MESSAGE -->
+    <div class="bday-message">
+      <p>Dear <strong>Jerry</strong>,</p><br>
+      <p>
+        On this very special day, I want you to know — having you as my best friend
+        is the <strong>greatest thing that ever happened to me</strong>. 🎀
+      </p><br>
+      <p>
+        You're the kind of person who makes ordinary days feel like a celebration.
+        You laugh the loudest, care the deepest, and somehow make everyone around you
+        feel like the most important person in the room.
+      </p><br>
+      <p>
+        Tom and Jerry fight, yes — but no matter what, they <strong>always find their way back</strong>
+        to each other. That's us. That will always be us. 🐱🐭
+      </p><br>
+      <p>
+        So on your birthday, I'm wishing you every good thing —
+        <strong>belly laughs, good food, zero drama, and endless happiness</strong>.
+        You deserve every single bit of it and so much more. 🌟 
+      </p><br>
+      <p>Keep being the Jerry to my Tom. The world needs your kind of magic. and again happiest birthday betaaa💛</p>
+      <div class="bday-sign">With all my heart,<br>Your Tom 🐱🎂</div>
+    </div>
+
+    <div class="cake-row">
+      <span>🎂</span><span>🎉</span><span>🎈</span><span>🥳</span>
+      <span>🎊</span><span>💛</span><span>🎁</span>
+    </div>
+  </div>
+</div>
+
+<canvas id="confetti"></canvas>
+
+<!-- ══════════════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hearts-bg" id="heartsContainer"></div>
+  <div class="bday-banner">🎂 It's Her Birthday! 🎂</div>
+  <h1 class="hero-title">Hey there,<br>my <span class="highlight">Jerry</span> 🐭</h1>
+  <p class="hero-subtitle">~ Because every Tom needs his Jerry ~</p>
+  <button class="click-hint" onclick="openModal()">🐭 Tap Jerry for a surprise! 🎁</button>
+
+  <div class="chase-scene">
+    <div class="jerry-char">
+      <svg class="jerry-svg" viewBox="0 0 60 75" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="18" cy="14" rx="8" ry="10" fill="#c97c3a"/>
+        <ellipse cx="42" cy="14" rx="8" ry="10" fill="#c97c3a"/>
+        <ellipse cx="18" cy="14" rx="5" ry="7" fill="#f4b8a0"/>
+        <ellipse cx="42" cy="14" rx="5" ry="7" fill="#f4b8a0"/>
+        <ellipse cx="30" cy="28" rx="22" ry="20" fill="#c97c3a"/>
+        <ellipse cx="22" cy="25" rx="4" ry="4.5" fill="#fff"/>
+        <ellipse cx="38" cy="25" rx="4" ry="4.5" fill="#fff"/>
+        <circle cx="22" cy="26" r="2.2" fill="#222"/>
+        <circle cx="38" cy="26" r="2.2" fill="#222"/>
+        <circle cx="23" cy="25" r="0.8" fill="#fff"/>
+        <circle cx="39" cy="25" r="0.8" fill="#fff"/>
+        <ellipse cx="30" cy="32" rx="3" ry="2" fill="#e8808a"/>
+        <path d="M27 34 Q30 37 33 34" stroke="#555" stroke-width="1" fill="none" stroke-linecap="round"/>
+        <line x1="10" y1="31" x2="25" y2="32" stroke="#888" stroke-width=".8"/>
+        <line x1="10" y1="34" x2="25" y2="34" stroke="#888" stroke-width=".8"/>
+        <line x1="35" y1="32" x2="50" y2="31" stroke="#888" stroke-width=".8"/>
+        <line x1="35" y1="34" x2="50" y2="34" stroke="#888" stroke-width=".8"/>
+        <ellipse cx="30" cy="54" rx="14" ry="16" fill="#c97c3a"/>
+        <ellipse cx="30" cy="56" rx="9" ry="11" fill="#f4d4b0"/>
+        <rect class="leg" x="19" y="66" width="8" height="14" rx="4" fill="#c97c3a"/>
+        <rect class="leg2" x="33" y="66" width="8" height="14" rx="4" fill="#c97c3a"/>
+        <path d="M44 60 Q62 52 58 42" stroke="#c97c3a" stroke-width="4" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="tom-char">
+      <svg class="tom-svg" viewBox="0 0 80 90" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="22" cy="16" rx="11" ry="13" fill="#7bafd4"/>
+        <ellipse cx="58" cy="16" rx="11" ry="13" fill="#7bafd4"/>
+        <ellipse cx="22" cy="16" rx="7" ry="9" fill="#f4b8c8"/>
+        <ellipse cx="58" cy="16" rx="7" ry="9" fill="#f4b8c8"/>
+        <ellipse cx="40" cy="34" rx="28" ry="26" fill="#7bafd4"/>
+        <ellipse cx="40" cy="38" rx="18" ry="12" fill="#e8e0d8"/>
+        <ellipse cx="28" cy="28" rx="5.5" ry="6" fill="#fff"/>
+        <ellipse cx="52" cy="28" rx="5.5" ry="6" fill="#fff"/>
+        <circle cx="29" cy="29" r="3" fill="#2d5a8e"/>
+        <circle cx="53" cy="29" r="3" fill="#2d5a8e"/>
+        <circle cx="30" cy="28" r="1.2" fill="#fff"/>
+        <circle cx="54" cy="28" r="1.2" fill="#fff"/>
+        <ellipse cx="40" cy="36" rx="4" ry="3" fill="#e8808a"/>
+        <path d="M33 40 Q40 45 47 40" stroke="#666" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        <rect x="35" y="40" width="10" height="3" rx="1" fill="#fff" stroke="#ccc" stroke-width=".5"/>
+        <line x1="8" y1="36" x2="28" y2="37" stroke="#aaa" stroke-width=".9"/>
+        <line x1="8" y1="40" x2="28" y2="40" stroke="#aaa" stroke-width=".9"/>
+        <line x1="52" y1="37" x2="72" y2="36" stroke="#aaa" stroke-width=".9"/>
+        <line x1="52" y1="40" x2="72" y2="40" stroke="#aaa" stroke-width=".9"/>
+        <ellipse cx="40" cy="68" rx="18" ry="20" fill="#7bafd4"/>
+        <ellipse cx="40" cy="70" rx="11" ry="14" fill="#c8d8e8"/>
+        <rect class="arm" x="8" y="56" width="10" height="20" rx="5" fill="#7bafd4"/>
+        <rect x="62" y="56" width="10" height="20" rx="5" fill="#7bafd4" style="transform-origin:62px 56px;animation:armSwing .28s ease-in-out infinite alternate-reverse"/>
+        <rect class="leg" x="26" y="82" width="10" height="16" rx="5" fill="#7bafd4"/>
+        <rect class="leg2" x="44" y="82" width="10" height="16" rx="5" fill="#7bafd4"/>
+        <path d="M58 75 Q76 70 72 55" stroke="#7bafd4" stroke-width="5" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="chase-ground"></div>
+    <span class="star-burst" style="top:18px;left:38%">✨</span>
+    <span class="star-burst" style="top:26px;left:58%;animation-delay:-.3s">⭐</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     REASONS
+══════════════════════════════════════════════════════ -->
+<section class="reasons-section">
+  <span class="section-label reveal">💛 Just Because</span>
+  <h2 class="section-title reveal">Why You're My Favourite Person</h2>
+  <div class="reasons-grid">
+    <div class="reason-card reveal"><span class="icon">😂</span><h3>You Make Me Laugh</h3><p>Even when life is cartoon chaos</p></div>
+    <div class="reason-card reveal"><span class="icon">🤝</span><h3>Always There</h3><p>Through every chase &amp; every fall</p></div>
+    <div class="reason-card reveal"><span class="icon">🎭</span><h3>The Perfect Duo</h3><p>Like Tom &amp; Jerry — meant to be together</p></div>
+    <div class="reason-card reveal"><span class="icon">🌟</span><h3>You're a Star</h3><p>Bright, bold &amp; impossible to ignore</p></div>
+    <div class="reason-card reveal"><span class="icon">🎯</span><h3>Zero Filter</h3><p>Totally real, no pretending needed</p></div>
+    <div class="reason-card reveal"><span class="icon">🏠</span><h3>Home Vibes</h3><p>Wherever you are, feels like home</p></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     DUEL — JERRY CLICKABLE
+══════════════════════════════════════════════════════ -->
+<section class="duel-section reveal">
+  <span class="section-label">🎬 The Dynamic Duo</span>
+  <h2 class="section-title">Me &amp; You</h2>
+  <div class="duel-stage">
+    <!-- Tom -->
+    <div class="duel-tom">
+      <svg width="86" height="105" viewBox="0 0 80 90" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="22" cy="16" rx="11" ry="13" fill="#7bafd4"/>
+        <ellipse cx="58" cy="16" rx="11" ry="13" fill="#7bafd4"/>
+        <ellipse cx="22" cy="16" rx="7" ry="9" fill="#f4b8c8"/>
+        <ellipse cx="58" cy="16" rx="7" ry="9" fill="#f4b8c8"/>
+        <ellipse cx="40" cy="34" rx="28" ry="26" fill="#7bafd4"/>
+        <ellipse cx="40" cy="38" rx="18" ry="12" fill="#e8e0d8"/>
+        <ellipse cx="28" cy="28" rx="5.5" ry="6" fill="#fff"/>
+        <ellipse cx="52" cy="28" rx="5.5" ry="6" fill="#fff"/>
+        <circle cx="29" cy="29" r="3" fill="#2d5a8e"/>
+        <circle cx="53" cy="29" r="3" fill="#2d5a8e"/>
+        <circle cx="30" cy="28" r="1.2" fill="#fff"/>
+        <circle cx="54" cy="28" r="1.2" fill="#fff"/>
+        <ellipse cx="40" cy="36" rx="4" ry="3" fill="#e8808a"/>
+        <path d="M32 41 Q40 48 48 41" stroke="#666" stroke-width="1.5" fill="#fff" stroke-linecap="round"/>
+        <line x1="8" y1="36" x2="28" y2="37" stroke="#aaa" stroke-width=".9"/>
+        <line x1="52" y1="37" x2="72" y2="36" stroke="#aaa" stroke-width=".9"/>
+        <ellipse cx="40" cy="68" rx="18" ry="20" fill="#7bafd4"/>
+        <ellipse cx="40" cy="70" rx="11" ry="14" fill="#c8d8e8"/>
+        <rect x="8" y="56" width="10" height="20" rx="5" fill="#7bafd4"/>
+        <rect x="62" y="56" width="10" height="20" rx="5" fill="#7bafd4"/>
+        <rect x="26" y="82" width="10" height="16" rx="5" fill="#7bafd4"/>
+        <rect x="44" y="82" width="10" height="16" rx="5" fill="#7bafd4"/>
+      </svg>
+      <span class="duel-label">Tom (me 🐱)</span>
+    </div>
+
+    <div class="duel-heart">❤️</div>
+
+    <!-- Jerry — clickable, birthday hat -->
+    <div class="duel-jerry">
+      <div class="duel-jerry-inner" onclick="openModal()" role="button" aria-label="Open birthday surprise">
+        <svg width="76" height="100" viewBox="0 0 60 82" xmlns="http://www.w3.org/2000/svg">
+          <!-- birthday hat -->
+          <polygon points="30,0 17,20 43,20" fill="#e84040"/>
+          <line x1="17" y1="20" x2="43" y2="20" stroke="#f9c74f" stroke-width="1.8"/>
+          <circle cx="30" cy="0" r="3.5" fill="#f9c74f"/>
+          <circle cx="22" cy="8" r="1.8" fill="#f9c74f"/>
+          <circle cx="36" cy="6" r="1.4" fill="#fff"/>
+          <!-- Jerry body -->
+          <ellipse cx="18" cy="28" rx="8" ry="10" fill="#c97c3a"/>
+          <ellipse cx="42" cy="28" rx="8" ry="10" fill="#c97c3a"/>
+          <ellipse cx="18" cy="28" rx="5" ry="7" fill="#f4b8a0"/>
+          <ellipse cx="42" cy="28" rx="5" ry="7" fill="#f4b8a0"/>
+          <ellipse cx="30" cy="40" rx="22" ry="20" fill="#c97c3a"/>
+          <ellipse cx="22" cy="37" rx="4" ry="4.5" fill="#fff"/>
+          <ellipse cx="38" cy="37" rx="4" ry="4.5" fill="#fff"/>
+          <circle cx="22" cy="38" r="2.2" fill="#222"/>
+          <circle cx="38" cy="38" r="2.2" fill="#222"/>
+          <circle cx="23" cy="37" r=".8" fill="#fff"/>
+          <circle cx="39" cy="37" r=".8" fill="#fff"/>
+          <ellipse cx="30" cy="44" rx="3" ry="2" fill="#e8808a"/>
+          <path d="M25 47 Q30 52 35 47" stroke="#555" stroke-width="1.2" fill="#fff" stroke-linecap="round"/>
+          <line x1="10" y1="43" x2="25" y2="44" stroke="#888" stroke-width=".8"/>
+          <line x1="35" y1="44" x2="50" y2="43" stroke="#888" stroke-width=".8"/>
+          <ellipse cx="30" cy="65" rx="14" ry="16" fill="#c97c3a"/>
+          <ellipse cx="30" cy="67" rx="9" ry="11" fill="#f4d4b0"/>
+          <rect x="19" y="77" width="8" height="14" rx="4" fill="#c97c3a"/>
+          <rect x="33" y="77" width="8" height="14" rx="4" fill="#c97c3a"/>
+          <path d="M44 72 Q62 63 58 52" stroke="#c97c3a" stroke-width="4" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="duel-label">Jerry (you 🐭🎂)</span>
+    </div>
+  </div>
+  <p class="duel-hint">↑ Tap Jerry for a birthday surprise! 🎉</p>
+</section>
+
+
+
+<!-- ══════════════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════════════ -->
+<footer>
+  <span class="paw">🐾</span>
+  <span class="paw" style="animation-delay:.2s">🐾</span>
+  <span class="paw" style="animation-delay:.4s">🐾</span>
+  <br>Made with <span style="color:#e84040">❤️</span> by your Tom
+  <p>Because every Jerry deserves their own birthday website 🎂</p>
+</footer>
+
+<!-- ══════════════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════════════ -->
+<script>
+/* ─────────────────────────────────────────────────────
+   CUSTOM AUDIO — replace file paths below with your own
+───────────────────────────────────────────────────── */
+
+// ── HOW TO USE YOUR OWN AUDIO FILES ─────────────────
+// 1. Place your MP3/MKV/OGG files in the SAME folder as this HTML file.
+// 2. Update the src values below to match your file names.
+//    Examples:
+//      BG_AUDIO_SRC   = 'my-background-song.mp3'
+//      BDAY_AUDIO_SRC = 'happy-birthday.mp3'
+// 3. MKV files work in most modern browsers for audio-only content.
+//    If your MKV has video, consider extracting the audio to MP3 first.
+// ────────────────────────────────────────────────────
+
+const BG_AUDIO_SRC   = 'background.mp3';   // ← Your background music file
+const BDAY_AUDIO_SRC = 'birthday.mp3';     // ← Your Jerry-click birthday song file
+
+// Create audio elements
+const bgAudio   = new Audio(BG_AUDIO_SRC);
+bgAudio.loop    = true;
+bgAudio.volume  = 0.5;
+
+const bdayAudio  = new Audio(BDAY_AUDIO_SRC);
+bdayAudio.volume = 0.85;
+
+let bgPlaying = false;
+let bdayTimeout = null;
+
+function startBgMusic(){
+  bgPlaying = true;
+  bgAudio.play().catch(()=>{});
+  document.getElementById('bg-icon').innerHTML =
+    '<div class="bars"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>';
+  document.getElementById('bg-toggle').classList.add('playing');
+}
+
+function stopBgMusic(){
+  bgPlaying = false;
+  bgAudio.pause();
+  document.getElementById('bg-icon').textContent = '🎵';
+  document.getElementById('bg-toggle').classList.remove('playing');
+}
+
+function toggleBgMusic(){
+  if(bgPlaying) stopBgMusic();
+  else startBgMusic();
+}
+
+// ── JERRY CLICK — BIRTHDAY SONG ─────────────────────
+function playHappyBirthday(){
+  // Fade out background momentarily
+  const wasBgPlaying = bgPlaying;
+  if(bgPlaying){ stopBgMusic(); }
+
+  // Reset and play birthday audio
+  bdayAudio.currentTime = 0;
+  bdayAudio.play().catch(()=>{});
+
+  // Resume bg music after birthday song ends
+  clearTimeout(bdayTimeout);
+  bdayAudio.onended = ()=>{
+    if(wasBgPlaying) startBgMusic();
+  };
+  // Fallback: resume after 30s if onended doesn't fire
+  bdayTimeout = setTimeout(()=>{
+    if(wasBgPlaying && !bgPlaying) startBgMusic();
+  }, 30000);
+}
+
+/* ─────────────────────────────────────────────────────
+   CONFETTI
+───────────────────────────────────────────────────── */
+const canvas = document.getElementById('confetti');
+const ctx2 = canvas.getContext('2d');
+function resizeC(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
+resizeC(); window.addEventListener('resize', resizeC);
+
+let ptcls = [];
+const COLORS=['#f9c74f','#e84040','#7bafd4','#c97c3a','#90be6d','#ffb3c1','#fff','#a8dadc','#ff6b9d'];
+
+function mkPtcl(x,y){
+  return{
+    x,y,
+    vx:(Math.random()-.5)*10, vy:(Math.random()*-10)-3,
+    size:5+Math.random()*9,
+    color:COLORS[Math.floor(Math.random()*COLORS.length)],
+    rot:Math.random()*360, rotV:(Math.random()-.5)*12,
+    grav:0.28, life:1,
+    decay:0.013+Math.random()*0.012,
+    shape:Math.random()>.5?'rect':'circle'
+  };
+}
+function burst(x,y,n=100){
+  for(let i=0;i<n;i++) ptcls.push(mkPtcl(x+(Math.random()-.5)*160,y+(Math.random()-.5)*60));
+}
+function drawC(){
+  ctx2.clearRect(0,0,canvas.width,canvas.height);
+  ptcls.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy; p.vy+=p.grav;
+    p.rot+=p.rotV; p.life-=p.decay;
+    ctx2.save();
+    ctx2.translate(p.x,p.y); ctx2.rotate(p.rot*Math.PI/180);
+    ctx2.globalAlpha=Math.max(0,p.life);
+    ctx2.fillStyle=p.color;
+    if(p.shape==='rect') ctx2.fillRect(-p.size/2,-p.size/4,p.size,p.size/2);
+    else{ ctx2.beginPath(); ctx2.arc(0,0,p.size/2,0,Math.PI*2); ctx2.fill(); }
+    ctx2.restore();
+  });
+  ptcls=ptcls.filter(p=>p.life>0);
+  requestAnimationFrame(drawC);
+}
+drawC();
+
+setTimeout(()=>{ burst(window.innerWidth/2,window.innerHeight/3,120); },700);
+setTimeout(()=>{ burst(window.innerWidth*.25,window.innerHeight*.4,70); },1100);
+setTimeout(()=>{ burst(window.innerWidth*.75,window.innerHeight*.4,70); },1350);
+
+/* ─────────────────────────────────────────────────────
+   MODAL
+───────────────────────────────────────────────────── */
+function openModal(){
+  document.getElementById('bday-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+  playHappyBirthday();
+  // Big confetti storm
+  for(let i=0;i<7;i++){
+    setTimeout(()=>burst(Math.random()*window.innerWidth,100,90),i*220);
+  }
+}
+function closeModal(){
+  document.getElementById('bday-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.getElementById('bday-overlay').addEventListener('click',function(e){
+  if(e.target===this) closeModal();
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+
+/* ─────────────────────────────────────────────────────
+   CAROUSEL
+───────────────────────────────────────────────────── */
+let cur=0; const TOTAL=6;
+const track = document.getElementById('track');
+const dotsEl = document.getElementById('dots');
+
+for(let i=0;i<TOTAL;i++){
+  const d=document.createElement('button');
+  d.className='dot'+(i===0?' active':'');
+  d.setAttribute('aria-label','Slide '+(i+1));
+  d.addEventListener('click',()=>goTo(i));
+  dotsEl.appendChild(d);
+}
+function goTo(n){
+  cur=(n+TOTAL)%TOTAL;
+  track.style.transform=`translateX(-${cur*100}%)`;
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
+}
+function slideCarousel(dir){ goTo(cur+dir); }
+
+let autoSl=setInterval(()=>slideCarousel(1),3800);
+track.addEventListener('mouseenter',()=>clearInterval(autoSl));
+track.addEventListener('mouseleave',()=>{ autoSl=setInterval(()=>slideCarousel(1),3800); });
+
+// Touch swipe
+let tx=0;
+track.addEventListener('touchstart',e=>{ tx=e.touches[0].clientX; },{passive:true});
+track.addEventListener('touchend',e=>{
+  const d=tx-e.changedTouches[0].clientX;
+  if(Math.abs(d)>35) slideCarousel(d>0?1:-1);
+},{passive:true});
+
+/* ─────────────────────────────────────────────────────
+   FLOATING HEARTS
+───────────────────────────────────────────────────── */
+const hc=document.getElementById('heartsContainer');
+const hE=['❤️','💛','💜','🧡','💕','💝','💖','💗','🎂','🎈'];
+for(let i=0;i<18;i++){
+  const s=document.createElement('span');
+  s.textContent=hE[Math.floor(Math.random()*hE.length)];
+  s.style.cssText=`left:${Math.random()*100}vw;bottom:-30px;animation-duration:${4+Math.random()*6}s;animation-delay:${Math.random()*8}s`;
+  hc.appendChild(s);
+}
+
+/* ─────────────────────────────────────────────────────
+   SCROLL REVEAL
+───────────────────────────────────────────────────── */
+const revObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+/* ─────────────────────────────────────────────────────
+   SPARKLE CURSOR (desktop only)
+───────────────────────────────────────────────────── */
+const spE=['✨','⭐','💫','🌟','💛','🎉'];
+let lsT=0;
+if(!('ontouchstart' in window)){
+  document.addEventListener('mousemove',e=>{
+    const now=Date.now(); if(now-lsT<80) return; lsT=now;
+    const d=document.createElement('div');
+    d.className='sparkle';
+    d.textContent=spE[Math.floor(Math.random()*spE.length)];
+    d.style.left=(e.clientX-10)+'px'; d.style.top=(e.clientY-10)+'px';
+    document.body.appendChild(d);
+    setTimeout(()=>d.remove(),700);
+  });
+}
+
+/* ─────────────────────────────────────────────────────
+   AUTO-PLAY MUSIC on first interaction
+───────────────────────────────────────────────────── */
+let firstPlay = true;
+function tryAutoPlay(){
+  if(!firstPlay) return;
+  firstPlay = false;
+  startBgMusic();
+  // Hide toast
+  const t=document.getElementById('music-toast');
+  if(t){ t.style.animation='toastOut .4s ease forwards'; setTimeout(()=>t.remove(),500); }
+}
+['touchstart','click','keydown'].forEach(ev=>{
+  document.addEventListener(ev, tryAutoPlay, {once:true});
+});
+
+// Remove toast after 4s anyway
+setTimeout(()=>{
+  const t=document.getElementById('music-toast');
+  if(t){ t.style.animation='toastOut .4s ease forwards'; setTimeout(()=>t.remove(),500); }
+},4000);
+</script>
+</body>
+</html>
